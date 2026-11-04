@@ -108,11 +108,11 @@ def compute_pde_residual_loss(
     xyt = torch.cat([x, y, t], dim=1)
     T = model(xyt)
 
-    # First derivatives
+    # First derivatives computed in a single graph traversal
     grad_outputs = torch.ones_like(T)
-    T_x = torch.autograd.grad(T, x, grad_outputs=grad_outputs, create_graph=True)[0]
-    T_y = torch.autograd.grad(T, y, grad_outputs=grad_outputs, create_graph=True)[0]
-    T_t = torch.autograd.grad(T, t, grad_outputs=grad_outputs, create_graph=True)[0]
+    T_x, T_y, T_t = torch.autograd.grad(
+        T, (x, y, t), grad_outputs=grad_outputs, create_graph=True
+    )
 
     # Second spatial derivatives
     T_xx = torch.autograd.grad(T_x, x, grad_outputs=torch.ones_like(T_x), create_graph=True)[0]

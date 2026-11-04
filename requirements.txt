@@ -1,16 +1,7 @@
-# pinn-heat-equation-2d
-# Python 3.10+ recommended. CPU-only setup (no GPU needed).
-#
-# Install PyTorch CPU build first (smaller download, works on Windows):
-#   pip install torch --index-url https://download.pytorch.org/whl/cpu
-# Then install the rest:
-#   pip install -r requirements.txt
-#
-# After everything works on your machine, run `pip freeze` and pin the exact
-# versions you tested (replace the ranges below) for full reproducibility.
-
-torch>=2.2
-numpy>=1.26
-matplotlib>=3.8
-pillow>=10.0
-imageio>=2.34
+# Pinned dependencies for pinn-heat-equation-2d
+# Tested on Python 3.14 (Windows x86_64, CPU)
+torch==2.15.0
+numpy==2.5.4
+matplotlib==3.11.2
+pillow==13.0.0
+imageio==2.38.1

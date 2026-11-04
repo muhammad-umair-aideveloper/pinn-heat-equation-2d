@@ -142,3 +142,4 @@ def train_pinn(config: PINNConfig) -> Dict[str, List[float]]:
 if __name__ == "__main__":
     cfg = PINNConfig()
     train_pinn(cfg)
+

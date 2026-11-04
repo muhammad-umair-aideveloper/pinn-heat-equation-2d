@@ -193,3 +193,4 @@ def run_evaluation(config: Optional[PINNConfig] = None) -> Dict[float, Dict[str,
 
 if __name__ == "__main__":
     run_evaluation()
+

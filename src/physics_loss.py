@@ -5,10 +5,17 @@ along with initial condition (IC) and Dirichlet boundary condition (BC) losses.
 """
 
 import math
+import sys
+from pathlib import Path
 from typing import Dict, Tuple
 
 import torch
 import torch.nn as nn
+
+# Ensure project root is in sys.path for direct script execution
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from src.config import PINNConfig
 

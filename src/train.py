@@ -8,6 +8,7 @@ Features:
 - Generating training loss convergence curve to results/loss_curve.png.
 """
 
+import argparse
 import sys
 import time
 from pathlib import Path
@@ -113,11 +114,12 @@ def train_pinn(config: PINNConfig) -> Dict[str, List[float]]:
                 f"IC: {loss_dict['loss_ic']:.6f} | "
                 f"BC: {loss_dict['loss_bc']:.6f} | "
                 f"lr: {current_lr:.2e} | "
-                f"Time: {elapsed:.1f}s"
+                f"Time: {elapsed:.1f}s",
+                flush=True,
             )
 
     total_training_time = time.time() - start_time
-    print(f"\nTraining completed in {total_training_time:.2f} seconds.")
+    print(f"\nTraining completed in {total_training_time:.2f} seconds.", flush=True)
 
     # 4. Save Model Checkpoint
     torch.save(
@@ -131,7 +133,7 @@ def train_pinn(config: PINNConfig) -> Dict[str, List[float]]:
         },
         config.model_path,
     )
-    print(f"Model saved to: {config.model_path}")
+    print(f"Model saved to: {config.model_path}", flush=True)
 
     # 5. Plot Loss Curves
     plot_loss_curve(loss_history, config.loss_curve_path)
@@ -139,7 +141,26 @@ def train_pinn(config: PINNConfig) -> Dict[str, List[float]]:
     return loss_history
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments for PINN training."""
+    default_cfg = PINNConfig()
+    parser = argparse.ArgumentParser(description="Train 2D Heat Equation PINN.")
+    parser.add_argument("--epochs", type=int, default=default_cfg.epochs, help="Number of training epochs")
+    parser.add_argument("--lr", type=float, default=default_cfg.learning_rate, help="Initial learning rate")
+    parser.add_argument("--n-pde", type=int, default=default_cfg.n_collocation_pde, help="Number of interior collocation points")
+    parser.add_argument("--log-freq", type=int, default=default_cfg.log_frequency, help="Logging frequency in epochs")
+    parser.add_argument("--seed", type=int, default=default_cfg.seed, help="Random seed for reproducibility")
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    cfg = PINNConfig()
+    args = parse_args()
+    cfg = PINNConfig(
+        epochs=args.epochs,
+        learning_rate=args.lr,
+        n_collocation_pde=args.n_pde,
+        log_frequency=args.log_freq,
+        seed=args.seed,
+    )
     train_pinn(cfg)
 

@@ -11,7 +11,7 @@ Outputs the results to stdout and saves a Markdown summary table into results/me
 import platform
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import torch

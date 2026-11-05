@@ -63,7 +63,7 @@ $$\mathcal{L}_{\text{total}} = w_{\text{pde}} \mathcal{L}_{\text{pde}} + w_{\tex
 - **Collocation Points**: Dynamically resampled every epoch ($N_{\text{pde}} = 5000$, $N_{\text{ic}} = 1000$, $N_{\text{bc}} = 1000$).
 - **Optimizer**: Adam ($\beta_1 = 0.9, \beta_2 = 0.999$, initial learning rate $\eta = 1 \times 10^{-3}$).
 - **Scheduler**: Cosine Annealing learning rate scheduler ($\eta_{\min} = 1 \times 10^{-5}$).
-- **Device**: Intel CPU execution with 4 parallel threads.
+- **Device**: Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz, CPU only (no GPU).
 
 ---
 
@@ -140,16 +140,16 @@ $$\text{Relative } L_2 \text{ Error} = \frac{\|T_{\text{pred}} - T_{\text{exact}
 | 1.00 | 0.9648% | 0.016553 | 0.002948 | PASSED (< 2%) |
 
 - **Mean Relative $L_2$ Error across all snapshots**: **0.8612%**
-- **Hardware**: Intel Core CPU (4 threads)
+- **Hardware**: Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz, CPU only (no GPU)
 - **Training Wall-Clock Time**: 1215.65 s (5000 epochs)
 
 ---
 
 ## 7. Limitations and Future Work
 
-1. **Precision Target Achieved**: All evaluation snapshots satisfy the scholarship criteria with relative $L_2$ error $< 1.0\%$ (well below the $2.0\%$ target threshold).
-2. **Second-Order Optimization**: While Adam with Cosine Annealing yields $< 1\%$ error, hybrid training combining Adam with L-BFGS for the final 500 epochs can achieve sub-0.1% accuracy.
-3. **Adaptive Collocation**: Collocation points are sampled uniformly across $[0, 1]^3$. Residual-based adaptive sampling (e.g., RAD / RAR) can allocate additional points near boundaries and steep thermal gradients.
+1. **Canonical Benchmark Scope**: This project is evaluated on a single smooth sinusoidal spatial mode on a canonical unit-square $[0, 1]^2$ domain where a closed-form analytical solution is available. Achieving a 0.86% mean relative error validates the PINN formulation and solver implementation, but it does not demonstrate generalization to complex non-convex reactor or magnet component geometries, irregular boundary conditions, or anisotropic multi-layer materials.
+2. **Second-Order Optimization**: While Adam with Cosine Annealing reliably achieves $< 1\%$ error, hybrid training combining Adam with L-BFGS for the final epochs can further improve asymptotic precision.
+3. **Adaptive Collocation**: Collocation points are sampled uniformly across $[0, 1]^3$. Residual-based adaptive sampling (e.g., RAD / RAR) can dynamically place additional points in regions with high spatial or temporal gradients.
 4. **Hard Boundary Constraints**: Exact Dirichlet boundary condition satisfaction could alternatively be enforced structurally using distance functions.
 
 ---

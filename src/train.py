@@ -9,6 +9,7 @@ Features:
 """
 
 import argparse
+import os
 import sys
 import time
 from pathlib import Path
@@ -39,6 +40,8 @@ def train_pinn(config: PINNConfig) -> Dict[str, List[float]]:
         Dictionary containing recorded loss history per logged interval.
     """
     # 1. Reproducibility
+    if config.device == "cpu":
+        torch.set_num_threads(os.cpu_count() or 4)
     torch.manual_seed(config.seed)
     np.random.seed(config.seed)
     device = torch.device(config.device)

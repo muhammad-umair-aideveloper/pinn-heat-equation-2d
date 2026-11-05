@@ -198,14 +198,32 @@ def generate_heat_evolution_gif(
 
 
 if __name__ == "__main__":
-    # Test script standalone functionality
     from src.model import HeatPINN
-    cfg = PINNConfig()
-    dev = torch.device("cpu")
-    net = HeatPINN().to(dev)
-    test_gif_path = cfg.results_dir / "test_evolution.gif"
-    generate_heat_evolution_gif(net, cfg, dev, test_gif_path, n_grid=20, n_frames=3, fps=2)
-    if test_gif_path.exists():
-        test_gif_path.unlink()
-        print("Self-test passed and temporary files cleaned up.")
 
+    cfg = PINNConfig()
+    dev = torch.device(cfg.device)
+
+    if not cfg.model_path.exists():
+        raise FileNotFoundError(
+            f"Checkpoint not found at {cfg.model_path}. Train the model first via src/train.py"
+        )
+
+    checkpoint = torch.load(cfg.model_path, map_location=dev, weights_only=False)
+    net = HeatPINN(
+        input_dim=cfg.input_dim,
+        hidden_dim=cfg.hidden_dim,
+        num_hidden_layers=cfg.num_hidden_layers,
+        output_dim=cfg.output_dim,
+    ).to(dev)
+    net.load_state_dict(checkpoint["model_state_dict"])
+    print(f"Loaded checkpoint from: {cfg.model_path}")
+
+    generate_heat_evolution_gif(
+        model=net,
+        config=cfg,
+        device=dev,
+        save_path=cfg.gif_path,
+        n_grid=50,
+        n_frames=cfg.gif_frames,
+        fps=cfg.gif_fps,
+    )
